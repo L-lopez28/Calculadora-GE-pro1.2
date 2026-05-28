@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calculadora Grupo Electrógeno PRO</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:linear-gradient(to bottom,#e5e5eb,#cbd5e2);
+    margin:0;
+    padding:10px;
+    text-align:center;
+}
+
+h1{
+    color:#0f666e;
+}
+
+h2{
+    color:#220;
+    font-size:24px;
+}
+
+p{
+    color:#688;
+    font-size:20px;
+}
+
+.pantalla{
+    display:none;
+}
+
+.activa{
+    display:block;
+}
+
+button{
+
+    width:320px;
+    height:75px;
+    margin:12px;
+    border:none;
+    border-radius:15px;
+    font-size:24px;
+    background:#0f766e;
+    color:white;
+    font-weight:bold;
+    box-shadow:0 4px 8px rgba(0,0,0,0.2);
+    transition:0.2s;
+}
+
+button:active{
+    transform:scale(0.97);
+}
+
+input, select{
+
+    width:320px;
+    height:60px;
+    font-size:24px;
+    text-align:center;
+    margin:10px;
+    border-radius:12px;
+    border:2px solid #ccc;
+}
+
+.resultado{
+
+    width:320px;
+    min-height:64px;
+    background:white;
+    border:3px solid #0f766e;
+    border-radius:15px;
+    margin:auto;
+    margin-top:25px;
+    font-size:42px;
+    color:#0f766e;
+    font-weight:bold;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:8px;
+}
+
+.volver{
+
+    background:#Ff0f0f8d;
+    width:174px;
+    height:55px;
+    font-size:20px;
+}
+
+.boxFlex{
+
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- MENU -->
+
+<div id="menu" class="pantalla activa">
+
+<h1>Calculadora Grupo Electrógeno PRO</h1>
+
+<p>Electro Industrial</p>
+
+<button onclick="abrir('corriente')">
+Calcular Corriente
+</button>
+
+<br>
+
+<button onclick="abrir('potencia')">
+Calcular Potencia
+</button>
+
+<br>
+
+<button onclick="abrir('kva')">
+Conversión kVA / kW
+</button>
+
+<br>
+
+<button onclick="abrir('derrateo')">
+Calcular Derrateo
+</button>
+
+<br>
+
+<button onclick="abrir('cables')">
+Capacidad Cable
+</button>
+
+</div>
+
+<!-- CORRIENTE -->
+
+<div id="corriente" class="pantalla">
+
+<h1>Calcular Corriente</h1>
+
+<input type="number" id="kw" placeholder="Potencia kW">
+
+<input type="number" id="volt1" placeholder="Voltaje">
+
+<select id="fp1">
+
+<option value="0.8">FP 0.8</option>
+<option value="0.85">FP 0.85</option>
+<option value="0.9">FP 0.9</option>
+
+</select>
+
+<select id="fase1">
+
+<option value="1.732">Trifásico</option>
+<option value="1">Monofásico</option>
+
+</select>
+
+<br>
+
+<button onclick="calcularCorriente()">
+CALCULAR
+</button>
+
+<div class="resultado" id="resultadoCorriente">
+0 A
+</div>
+
+<br>
+
+<button class="volver" onclick="inicio()">
+Volver
+</button>
+
+</div>
+
+<!-- POTENCIA -->
+
+<div id="potencia" class="pantalla">
+
+<h1>Calcular Potencia</h1>
+
+<input type="number" id="amp" placeholder="Corriente A">
+
+<input type="number" id="volt2" placeholder="Voltaje">
+
+<select id="fp2">
+
+<option value="0.8">FP 0.8</option>
+<option value="0.85">FP 0.85</option>
+<option value="0.9">FP 0.9</option>
+
+</select>
+
+<select id="fase2">
+
+<option value="1.732">Trifásico</option>
+<option value="1">Monofásico</option>
+
+</select>
+
+<br>
+
+<button onclick="calcularPotencia()">
+CALCULAR
+</button>
+
+<div class="resultado" id="resultadoPotencia">
+0 kW
+</div>
+
+<br>
+
+<button class="volver" onclick="inicio()">
+Volver
+</button>
+
+</div>
+
+<!-- KVA -->
+
+<div id="kva" class="pantalla">
+
+<h1>Conversión kVA / kW</h1>
+
+<input type="number" id="valorKva" placeholder="Ingrese valor">
+
+<select id="tipoKva">
+
+<option value="kwToKva">kW → kVA</option>
+<option value="kvaToKw">kVA → kW</option>
+
+</select>
+
+<select id="fp3">
+
+<option value="0.8">FP 0.8</option>
+<option value="0.85">FP 0.85</option>
+<option value="0.9">FP 0.9</option>
+
+</select>
+
+<br>
+
+<button onclick="calcularKVA()">
+CALCULAR
+</button>
+
+<div class="resultado" id="resultadoKVA">
+0
+</div>
+
+<br>
+
+<button class="volver" onclick="inicio()">
+Volver
+</button>
+
+</div>
+
+<!-- DERRATEO -->
+
+<div id="derrateo" class="pantalla">
+
+<h1>Calcular Derrateo</h1>
+
+<input type="number" id="kwD" placeholder="Potencia kW">
+
+<input type="number" id="altura" placeholder="Altura msnm">
+
+<br>
+
+<button onclick="calcularDerrateo()">
+CALCULAR
+</button>
+
+<div class="resultado" id="resultadoDerrateo">
+0 kW
+</div>
+
+<br>
+
+<button class="volver" onclick="inicio()">
+Volver
+</button>
+
+</div>
+
+<!-- CABLES -->
+
+<div id="cables" class="pantalla">
+
+<h1>Capacidad de Cable</h1>
+
+<div class="boxFlex">
+
+<div>
+
+<h2>CALIBRE<br>AWG - MCM</h2>
+
+<select id="awg" onchange="calcularCable()">
+
+<option value="">Ninguno</option>
+
+<option value="15">14</option>
+<option value="20">12</option>
+<option value="30">10</option>
+<option value="40">8</option>
+<option value="55">6</option>
+<option value="70">4</option>
+<option value="95">2</option>
+<option value="125">1</option>
+<option value="150">1/0</option>
+<option value="175">2/0</option>
+<option value="200">3/0</option>
+<option value="230">4/0</option>
+
+<option value="255">250</option>
+<option value="285">300</option>
+<option value="310">350</option>
+<option value="335">400</option>
+<option value="380">500</option>
+
+</select>
+
+</div>
+
+<div>
+
+<h2>SECCION<br>mm²</h2>
+
+<select id="mm2" onchange="calcularCable()">
+
+<option value="">Ninguno</option>
+
+<option value="15">1.5</option>
+<option value="20">2.5</option>
+<option value="28">4</option>
+<option value="36">6</option>
+<option value="50">10</option>
+<option value="68">16</option>
+<option value="89">25</option>
+<option value="110">35</option>
+<option value="140">50</option>
+<option value="175">70</option>
+<option value="220">95</option>
+<option value="260">120</option>
+<option value="300">150</option>
+<option value="340">185</option>
+<option value="395">240</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="resultado" id="resultadoCable">
+0 AMP
+</div>
+
+<br>
+
+<button class="volver" onclick="inicio()">
+Volver
+</button>
+
+</div>
+
+<script>
+
+function abrir(id){
+
+let pantallas =
+document.querySelectorAll(".pantalla");
+
+pantallas.forEach(p =>
+p.classList.remove("activa"));
+
+document.getElementById(id)
+.classList.add("activa");
+
+}
+
+function inicio(){
+
+let pantallas =
+document.querySelectorAll(".pantalla");
+
+pantallas.forEach(p =>
+p.classList.remove("activa"));
+
+document.getElementById("menu")
+.classList.add("activa");
+
+}
+
+function calcularCorriente(){
+
+let kw =
+parseFloat(document.getElementById("kw").value);
+
+let volt =
+parseFloat(document.getElementById("volt1").value);
+
+let fp =
+parseFloat(document.getElementById("fp1").value);
+
+let fase =
+parseFloat(document.getElementById("fase1").value);
+
+if(isNaN(kw) || isNaN(volt) || volt<=0){
+
+alert("Ingrese valores válidos");
+return;
+
+}
+
+let corriente =
+(kw*1000)/(volt*fase*fp);
+
+document.getElementById("resultadoCorriente")
+.innerHTML =
+corriente.toFixed(1) + " A";
+
+}
+
+function calcularPotencia(){
+
+let amp =
+parseFloat(document.getElementById("amp").value);
+
+let volt =
+parseFloat(document.getElementById("volt2").value);
+
+let fp =
+parseFloat(document.getElementById("fp2").value);
+
+let fase =
+parseFloat(document.getElementById("fase2").value);
+
+if(isNaN(amp) || isNaN(volt) || volt<=0){
+
+alert("Ingrese valores válidos");
+return;
+
+}
+
+let kw =
+(volt*amp*fase*fp)/1000;
+
+document.getElementById("resultadoPotencia")
+.innerHTML =
+kw.toFixed(1) + " kW";
+
+}
+
+function calcularKVA(){
+
+let valor =
+parseFloat(document.getElementById("valorKva").value);
+
+let fp =
+parseFloat(document.getElementById("fp3").value);
+
+let tipo =
+document.getElementById("tipoKva").value;
+
+if(isNaN(valor)){
+
+alert("Ingrese valor");
+return;
+
+}
+
+let resultado = 0;
+
+if(tipo=="kwToKva"){
+
+resultado = valor/fp;
+
+document.getElementById("resultadoKVA")
+.innerHTML =
+resultado.toFixed(1) + " kVA";
+
+}else{
+
+resultado = valor*fp;
+
+document.getElementById("resultadoKVA")
+.innerHTML =
+resultado.toFixed(1) + " kW";
+
+}
+
+}
+
+function calcularDerrateo(){
+
+let kw =
+parseFloat(document.getElementById("kwD").value);
+
+let altura =
+parseFloat(document.getElementById("altura").value);
+
+if(isNaN(kw) || isNaN(altura)){
+
+alert("Ingrese datos válidos");
+return;
+
+}
+
+let factor = 0;
+
+if(altura > 1000){
+
+factor =
+((altura-1000)/100)*0.01;
+
+}
+
+let final =
+kw - (kw*factor);
+
+document.getElementById("resultadoDerrateo")
+.innerHTML =
+final.toFixed(1) + " kW";
+
+}
+
+function calcularCable(){
+
+let awg =
+document.getElementById("awg").value;
+
+let mm2 =
+document.getElementById("mm2").value;
+
+let resultado = 0;
+
+if(awg != ""){
+
+resultado = awg;
+
+document.getElementById("mm2").selectedIndex = 0;
+
+}
+
+if(mm2 != ""){
+
+resultado = mm2;
+
+document.getElementById("awg").selectedIndex = 0;
+
+}
+
+document.getElementById("resultadoCable")
+.innerHTML =
+resultado + " AMP";
+
+}
+
+</script>
+
+</body>
+
+</html>
